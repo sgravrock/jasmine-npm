@@ -20,7 +20,7 @@
   "dependencies": {
     "exit": "^0.1.2",
     "glob": "^7.0.6",
-    "jasmine-core": "~2.6.0"
+    "jasmine-core": "git://github.com/sgravrock/jasmine.git#promises-temp-for-npm"
   },
   "bin": "./bin/jasmine.js",
   "main": "./lib/jasmine.js",
