@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "glob": "^7.1.4",
-    "jasmine-core": "~3.4.0"
+    "jasmine-core": "sgravrock/jasmine#toHaveBeenCalledWith-pretty"
   },
   "bin": "./bin/jasmine.js",
   "main": "./lib/jasmine.js",
