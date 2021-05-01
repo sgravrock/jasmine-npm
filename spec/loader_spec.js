@@ -62,7 +62,7 @@ function esModuleSharedExamples(extension, alwaysImport) {
     const loaderPromise = loader.load(`./foo/bar/baz.${extension}`, alwaysImport);
 
     expect(requireShim).not.toHaveBeenCalled();
-    expect(importShim).toHaveBeenCalledWith(`file://./foo/bar/baz.${extension}`);
+    expect(importShim).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp(`file://.*/foo/bar/baz.${extension}$`)));
     await expectAsync(loaderPromise).toBePending();
 
     resolve();
