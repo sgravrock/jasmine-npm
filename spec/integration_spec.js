@@ -49,7 +49,7 @@ describe('Integration', function () {
     expect(await runJasmine('spec/fixtures/js-loader-require')).toBeSuccess();
   });
 
-  it('loads .js files using require when jsLoader is undefined', async function() {
+  it('loads .js files using import when jsLoader is undefined', async function() {
     expect(await runJasmine('spec/fixtures/js-loader-default')).toBeSuccess();
   });
 
