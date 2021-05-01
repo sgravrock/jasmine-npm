@@ -21,41 +21,47 @@ executors:
     working_directory: ~/workspace
 
 jobs:
-  build_and_test:
+  test:
     parameters:
       executor:
         type: executor
     executor: << parameters.executor >>
     steps:
-      - checkout
-      - run:
-          name: Report Node and NPM versions
-          command: echo "Using Node $(node --version) and NPM $(npm --version)"
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Run tests
-          command: npm test
+    - checkout
+    - run:
+        name: Report Node and NPM versions
+        command: echo "Using Node $(node --version) and NPM $(npm --version)"
+    - run:
+        name: Install dependencies
+        command: npm install
+    - run:
+        name: Run tests
+        command: npm test
+
+  test_windows:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+    - checkout
+    - run:
+        name: Check for nvm
+        command: nvm
 
 workflows:
   version: 2
   push: &push_workflow
     jobs:
-      - build_and_test:
+      - test:
           executor: node14
           name: node_14
-      - build_and_test:
+      - test:
           executor: node12
           name: node_12
-      - build_and_test:
+      - test:
           executor: node10
           name: node_10
-      - build_and_test:
-          executor:
-            name: win/default
-            shell: powershell.exe
-          name: node_12_windows
+      - test_windows
   cron:
     <<: *push_workflow
     triggers:
