@@ -7,20 +7,31 @@ var projectBaseDir = 'spec/fixtures/sample_empty_project/';
 var spec = path.join(projectBaseDir, 'spec');
 
 function deleteDirectory(dir) {
-  if(fs.existsSync(dir)) {
+  if (fs.existsSync(dir)) {
     var dirFiles = fs.readdirSync(dir);
     dirFiles.forEach(function(file) {
       var fullPath = path.join(dir, file);
-      if(fs.statSync(fullPath).isDirectory()) {
+      if (fs.statSync(fullPath).isDirectory()) {
         deleteDirectory(fullPath);
       }
-      else if(fs.statSync(fullPath).isFile()){
+      else if (fs.statSync(fullPath).isFile()) {
         fs.unlinkSync(fullPath);
       }
     });
     fs.rmdirSync(dir);
   }
 }
+
+function withValueForIsTTY(value, func) {
+  var wasTTY = process.stdout.isTTY;
+  try {
+    process.stdout.isTTY = value;
+    func();
+  } finally {
+    process.stdout.isTTY = wasTTY;
+  }
+}
+
 
 describe('command', function() {
   beforeEach(function() {
@@ -44,6 +55,7 @@ describe('command', function() {
 
     this.fakeJasmine = jasmine.createSpyObj('jasmine', ['loadConfigFile', 'addHelperFiles', 'addRequires', 'showColors', 'execute', 'stopSpecOnExpectationFailure',
       'stopOnSpecFailure', 'randomizeTests', 'seed', 'coreVersion', 'clearReporters', 'addReporter']);
+    this.fakeJasmine.execute.and.returnValue(Promise.resolve());
   });
 
   afterEach(function() {
@@ -131,9 +143,11 @@ describe('command', function() {
 
   describe('--', function() {
     it('skips anything after it', function() {
-      this.command.run(this.fakeJasmine, ['node', 'bin/jasmine.js', '--', '--no-color']);
-      expect(this.out.getOutput()).toBe('');
-      expect(this.fakeJasmine.showColors).toHaveBeenCalledWith(true);
+      withValueForIsTTY(true, function () {
+        this.command.run(this.fakeJasmine, ['node', 'bin/jasmine.js', '--', '--no-color']);
+        expect(this.out.getOutput()).toBe('');
+        expect(this.fakeJasmine.showColors).toHaveBeenCalledWith(true);
+      }.bind(this));
     });
   });
 
@@ -157,16 +171,6 @@ describe('command', function() {
   });
 
   describe('running specs', function() {
-    var withValueForIsTTY = function(value, func) {
-      var wasTTY = process.stdout.isTTY;
-      try {
-        process.stdout.isTTY = value;
-        func();
-      } finally {
-        process.stdout.isTTY = wasTTY;
-      }
-    };
-
     beforeEach(function() {
       this.originalConfigPath = process.env.JASMINE_CONFIG_PATH;
     });

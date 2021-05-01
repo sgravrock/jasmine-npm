@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jasmine/jasmine-npm.png?branch=master)](https://travis-ci.org/jasmine/jasmine-npm)
+[![Build Status](https://circleci.com/gh/jasmine/jasmine-npm.svg?style=shield)](https://circleci.com/gh/jasmine/jasmine-npm)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjasmine%2Fjasmine-npm.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjasmine%2Fjasmine-npm?ref=badge_shield)
 
 # The Jasmine Module
@@ -60,6 +60,20 @@ Alternatively, you may specify the path to your `jasmine.json` by setting an env
 jasmine JASMINE_CONFIG_PATH=relative/path/to/your/jasmine.json
 jasmine --config=relative/path/to/your/jasmine.json
 ```
+
+## Using ES modules
+
+If the name of a spec file or helper file ends in `.mjs`, Jasmine will load it
+as an [ES module](https://nodejs.org/docs/latest-v13.x/api/esm.html) rather 
+than a CommonJS module. This allows the spec file or helper to import other 
+ES modules. No extra configuration is required.
+
+You can also use ES modules with names ending in `.js` by adding 
+`"jsLoader": "import"` to `jasmine.json`. This should work for CommonJS modules
+as well as ES modules. We expect to make it the default in a future release.
+Please [log an issue](https://github.com/jasmine/jasmine-npm/issues) if you have
+code that doesn't load correctly with `"jsLoader": "import"`.
+
 
 # Filtering specs
 
